@@ -42,3 +42,4 @@ records get added or removed from the table that stores the micro services, we a
 dynamically allocate/deallocate the associated resources like queues, schemas
 5. Develop cross-platform UI (Web/Hybrid Mobile app: iOS, Android, Windows 10) with Ionic v2 and Loopback framework.
 6. Add linter, make builds fail if linter fails.
+7. Add code coverage: https://www.npmjs.com/package/istanbul
