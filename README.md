@@ -21,6 +21,13 @@ https://hub.docker.com/_/postgres/
 
 ```docker run --name=postgres961 -e POSTGRES_PASSWORD=iotquickstart -e POSTGRES_USER=iotquickstartdba -e POSTGRES_DB=iotquickstartdb  postgres:9.6.1```
 
+### Run tests
+
+```$ npm i; npm test```
+
+### Run locally (docker containers need to be running)
+
+```$ npm i; npm run start-local-peter```
 
 
 ### TODO
