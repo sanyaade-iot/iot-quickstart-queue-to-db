@@ -1,0 +1,40 @@
+{
+  "name": "iot-quickstart-queue-to-db",
+  "version": "1.0.0",
+  "description": "Features a NodeJS application whose only purpose is to shovel data from specific RabbitMQ queues to the database.",
+  "main": "src/main/index.js",
+  "dependencies": {
+    "amqp": "0.2.6",
+    "check-types": "7.0.1",
+    "command-line-args": "3.0.3",
+    "cross-env": "3.1.3",
+    "lodash": "4.17.2",
+    "pg": "6.1.0"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "mocha": "3.2.0"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha src/test/ --recursive",
+    "start": "node ./src/main/index.js",
+    "start-local-peter": "cross-env IOT_QUICKSTART_DB_HOST=localhost IOT_QUICKSTART_DB_PORT=5432 IOT_QUICKSTART_DB_USER=iotquickstartdba IOT_QUICKSTART_DB_PASSWORD=iotquickstart IOT_QUICKSTART_DB_SCHEMA=iotquickstartdb IOT_QUICKSTART_QUEUE_HOST=localhost IOT_QUICKSTART_QUEUE_PORT=5672 IOT_QUICKSTART_QUEUE_USER=guest IOT_QUICKSTART_QUEUE_PASSWORD=guest npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petermetz/iot-quickstart-queue-to-db.git"
+  },
+  "keywords": [
+    "iot",
+    "internet-of-things",
+    "quickstart",
+    "queue",
+    "database"
+  ],
+  "author": "Peter <peter.metz@unarin.com> (Somogyvari)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/petermetz/iot-quickstart-queue-to-db/issues"
+  },
+  "homepage": "https://github.com/petermetz/iot-quickstart-queue-to-db#readme"
+}
