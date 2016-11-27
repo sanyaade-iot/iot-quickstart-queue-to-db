@@ -29,6 +29,14 @@ https://hub.docker.com/_/postgres/
 
 ```$ npm i; npm run start-local-peter```
 
+### Global npm dependencies
+
+None! Everything is installed into the local node_modules folder from the package definition
+and then referenced in scripts by leveraging the ./node_modules/.bin/ folder where packages
+can register their executables when needed.
+
+This approach resolves the usual problem of having to install global dependencies in a 
+production environment with superuser credentials.
 
 ### TODO
 
