@@ -38,7 +38,7 @@ class RuntimeConfig {
         check.assert.nonEmptyString(dbSchema, 'IllegalArg: dbSchema must be a non-empty string to begin with.');
         check.assert.nonEmptyString(queueHost, 'IllegalArg: queueHost must be a non-empty string to begin with.');
         check.assert.nonEmptyString(queueUser, 'IllegalArg: queueUser must be a non-empty string to begin with.');
-        check.assert.nonEmptyString(queuePassword, 'IllegalArg: queuePassword must be a non-empty string to begin with.');
+        check.assert.nonEmptyString(queuePassword, 'IllegalArg: queuePassword must be a non-empty string.');
 
         check.assert.number(dbPort, 'IllegalArg: Expected a number as the db port number.');
         check.assert.number(queuePort, 'IllegalArg: Expected a number as the db port number.');
@@ -46,8 +46,8 @@ class RuntimeConfig {
         check.assert.positive(dbPort, 'IllegalArg: Expected a positive number as the db port number.');
         check.assert.positive(queuePort, 'IllegalArg: Expected a positive number as the db port number.');
 
-        check.assert.lessOrEqual(dbPort, 65535, 'IllegalArg: Expected a positive number below 65535 as the db port number.');
-        check.assert.lessOrEqual(queuePort, 65535, 'IllegalArg: Expected a positive number below 65535 as the db port number.');
+        check.assert.lessOrEqual(dbPort, 65535, 'IllegalArg: Need a positive number below 65535 for db port.');
+        check.assert.lessOrEqual(queuePort, 65535, 'IllegalArg: Need a positive number below 65535 for queue port.');
 
         this._dbHost = dbHost;
         this._dbPort = dbPort;
