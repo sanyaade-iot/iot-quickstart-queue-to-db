@@ -89,7 +89,7 @@ const gracefulShutdown = (pgClient) => {
     // if after
     setTimeout(() => {
         console.error('Could not close connections in time, forcefully shutting down');
-        process.exit()
+        process.exit();
     }, 10000);
 };
 

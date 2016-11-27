@@ -13,9 +13,12 @@
   },
   "devDependencies": {
     "chai": "3.5.0",
+    "eslint": "3.11.0",
+    "eslint-config-node-style-guide": "3.0.0",
     "mocha": "3.2.0"
   },
   "scripts": {
+    "lint": "./node_modules/.bin/eslint ./src/main/",
     "test": "./node_modules/.bin/mocha src/test/ --recursive",
     "start": "node ./src/main/index.js",
     "start-local-peter": "cross-env IOT_QUICKSTART_DB_HOST=localhost IOT_QUICKSTART_DB_PORT=5432 IOT_QUICKSTART_DB_USER=iotquickstartdba IOT_QUICKSTART_DB_PASSWORD=iotquickstart IOT_QUICKSTART_DB_SCHEMA=iotquickstartdb IOT_QUICKSTART_QUEUE_HOST=localhost IOT_QUICKSTART_QUEUE_PORT=5672 IOT_QUICKSTART_QUEUE_USER=guest IOT_QUICKSTART_QUEUE_PASSWORD=guest npm run start"

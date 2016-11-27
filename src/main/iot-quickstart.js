@@ -151,13 +151,13 @@ class IotQuickstart {
 
             const microServicesEstablished = microServiceDbRecordList.map((microServiceDbRecord) => {
                 return this._createDbSchemaIfNotExists(microServiceDbRecord)
-                    .then(() => this._establishQueueConnection(microServiceDbRecord));
+                    .then(() => this._establishQueueSubscription(microServiceDbRecord));
             });
 
             Promise.all(microServicesEstablished)
                 .then(resolve)
                 .catch((err) => {
-                    const ex = new Error(`One/more MicroServices could not be allocated (queue,db): ${err && err.message}`);
+                    const ex = new Error(`Allocation fail for micro service(s) (queue,db): ${err && err.message}`);
                     ex.cause = err;
                     reject(ex);
                 });
@@ -169,7 +169,8 @@ class IotQuickstart {
      * Subscribes to the queue of the MicroService and initiates the database insertion task (so that all queue items
      * eventually get shoveled into the database).
      *
-     * @param microServiceDbRecord The database record representing the micro service. Used for obtaining the queue name.
+     * @param microServiceDbRecord The database record representing the micro service.
+     * Used for obtaining the queue name.
      *
      * @return {Promise.<string>}
      *
@@ -177,11 +178,11 @@ class IotQuickstart {
      *
      * @since 1.0.0
      */
-    _establishQueueConnection(microServiceDbRecord) {
+    _establishQueueSubscription(microServiceDbRecord) {
         return new Promise((resolve, reject) => {
 
             check.assert.like(microServiceDbRecord, {queue_name: '', db_schema_name: '', code_name: ''},
-                'IllegalArg: Expected parameter "microServiceDbRecord" to be a valid database record  of table "micro_service"');
+                'IllegalArg: Need arg "microServiceDbRecord" to be a valid database record of table "micro_service"');
 
             console.log(this._amqpConnection);
 
@@ -189,23 +190,32 @@ class IotQuickstart {
 
             this._amqpConnection.queue(microServiceDbRecord.queue_name, queueOptions, (aQueue) => {
 
-                aQueue.subscribe((message, headers, deliveryInfo, messageObject) => {
-                    console.log(`${deliveryInfo.routingKey} - ${message.data.toString()}`);
+                try {
 
-                    const eventDataJson = JSON.parse(message.data);
+                    aQueue.subscribe((message, headers, deliveryInfo) => {
+                        console.log(`${deliveryInfo.routingKey} - ${message.data.toString()}`);
 
-                    check.assert.like(eventDataJson, {"application_id": -1, "device_id": -1, "mac_address": ""},
-                        `Invalid message, expected structure to have fields: "application_id","device_id","mac_address"`);
+                        const eventDataJson = JSON.parse(message.data);
 
-                    this._entityManager.insertEventData(microServiceDbRecord.db_schema_name, eventDataJson)
-                        .catch((err) => {
-                            // pointless to crash the application because of this, so we just log it and see ...
-                            console.error(`Failed to persist message schema ${microServiceDbRecord.db_schema_name} `,
-                                err, eventDataJson);
-                        });
+                        check.assert.like(eventDataJson, {"application_id": -1, "device_id": -1, "mac_address": ""},
+                            `Invalid message, need to have fields: "application_id","device_id","mac_address"`);
 
-                });
-                resolve(aQueue);
+                        this._entityManager.insertEventData(microServiceDbRecord.db_schema_name, eventDataJson)
+                            .catch((err) => {
+                                // pointless to crash the application because of this, so we just log it and see ...
+                                console.error(`Failed to persist message to "${microServiceDbRecord.db_schema_name}"`,
+                                    err, eventDataJson);
+                            });
+
+                    });
+                    resolve(aQueue);
+
+                } catch (innerException) {
+                    const exception = new Error(`RuntimeError: During queue subscription: ${innerException.message}`);
+                    exception.cause = innerException;
+                    reject(exception);
+                }
+
             });
         })
             .then(() => console.log(`Queue subscription for ${microServiceDbRecord.queue_name} OK`));

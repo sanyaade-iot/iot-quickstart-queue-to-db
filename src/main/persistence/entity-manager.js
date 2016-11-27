@@ -46,7 +46,7 @@ class EntityManager {
                 application_id integer,
                 device_id integer,
                 mac_address character varying(512) COLLATE pg_catalog."default"
-            );`
+            );`;
     }
 
     /**
@@ -75,8 +75,8 @@ class EntityManager {
     /**
      * Side-effect free constructor used to set the private members based on the parameters.
      *
-     * @param {pg.Client} pgClient The database connection to be used while performing queries/statements. Expected to be already
-     * connected and functioning without errors.
+     * @param {pg.Client} pgClient The database connection to be used while performing queries/statements.
+     * Expected to be already connected and functioning without errors.
      *
      * @throws {Error} If any of the parameters are {@code null} or {@code undefined}
      *
@@ -173,9 +173,9 @@ class EntityManager {
                                         (application_id, device_id, mac_address)
                                         VALUES ($1, $2, $3);`;
 
-            const eventDataAsArray = [eventDataObject.application_id, eventDataObject.device_id, eventDataObject.mac_address];
+            const rowAsArray = [eventDataObject.application_id, eventDataObject.device_id, eventDataObject.mac_address];
 
-            this._pgClient.query(sqlInsertEventData, eventDataAsArray, (err, insertResults) => {
+            this._pgClient.query(sqlInsertEventData, rowAsArray, (err, insertResults) => {
                 if (err) {
                     reject({
                         message: `EntityManager.insertEventData() failed: "${sqlInsertEventData}"`,
