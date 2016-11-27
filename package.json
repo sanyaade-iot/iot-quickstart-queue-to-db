@@ -21,7 +21,8 @@
     "lint": "./node_modules/.bin/eslint ./src/main/",
     "test": "./node_modules/.bin/mocha src/test/ --recursive",
     "start": "node ./src/main/index.js",
-    "start-local-peter": "cross-env IOT_QUICKSTART_DB_HOST=localhost IOT_QUICKSTART_DB_PORT=5432 IOT_QUICKSTART_DB_USER=iotquickstartdba IOT_QUICKSTART_DB_PASSWORD=iotquickstart IOT_QUICKSTART_DB_SCHEMA=iotquickstartdb IOT_QUICKSTART_QUEUE_HOST=localhost IOT_QUICKSTART_QUEUE_PORT=5672 IOT_QUICKSTART_QUEUE_USER=guest IOT_QUICKSTART_QUEUE_PASSWORD=guest npm run start"
+    "start-local-peter": "cross-env IOT_QUICKSTART_DB_HOST=localhost IOT_QUICKSTART_DB_PORT=5432 IOT_QUICKSTART_DB_USER=iotquickstartdba IOT_QUICKSTART_DB_PASSWORD=iotquickstart IOT_QUICKSTART_DB_SCHEMA=iotquickstartdb IOT_QUICKSTART_QUEUE_HOST=localhost IOT_QUICKSTART_QUEUE_PORT=5672 IOT_QUICKSTART_QUEUE_USER=guest IOT_QUICKSTART_QUEUE_PASSWORD=guest npm run start",
+    "docker-build": "docker build -t petermetz/iot-quickstart-queue-to-db:latest -t petermetz/iot-quickstart-queue-to-db:1.0.0 ."
   },
   "repository": {
     "type": "git",
