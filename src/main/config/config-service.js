@@ -1,4 +1,6 @@
 const commandLineArgs = require('command-line-args');
+const log4js = require('log4js');
+const logger = log4js.getLogger('config-service');
 
 const RuntimeConfig = require('./runtime-config');
 
@@ -95,7 +97,7 @@ class ConfigService {
 
         const commandLineInterfaceDefinition = ConfigService.getCommandLineInterfaceDefinition();
         const cli = commandLineArgs(commandLineInterfaceDefinition);
-        console.log('CLI: ', cli.toString());
+        logger.trace('CommandLineArgs: ', cli.toString());
 
         // FIXME - Peter - implement the CLI contract as well ...
         return new RuntimeConfig(

@@ -1,4 +1,6 @@
 const check = require('check-types');
+const log4js = require('log4js');
+const logger = log4js.getLogger('iot-quickstart');
 
 const EntityManager = require('./persistence/entity-manager');
 const RuntimeConfig = require('./config/runtime-config');
@@ -95,7 +97,7 @@ class IotQuickstart {
      */
     init() {
 
-        console.log('IotQuickstart - Initializing ...');
+        logger.info('IotQuickstart - Initializing ...');
 
         return new Promise((resolve, reject) => {
             this._getMicroServicesFromDb()
@@ -107,7 +109,7 @@ class IotQuickstart {
                     reject(ex);
                 });
         })
-            .then(() => console.log('IotQuickstart - Initialization: OK'));
+            .then(() => logger.info('IotQuickstart - Initialization: OK'));
     }
 
     /**
@@ -143,7 +145,7 @@ class IotQuickstart {
      */
     _establishMicroServiceConnections(microServiceDbRecordList) {
 
-        console.log('IotQuickstart - establishing connections (db, queue) ...', microServiceDbRecordList);
+        logger.info('IotQuickstart - establishing connections (db, queue) ...', microServiceDbRecordList);
 
         check.assert.array(microServiceDbRecordList, 'IllegalArg: Expected an array of MicroService records.');
 
@@ -162,7 +164,7 @@ class IotQuickstart {
                     reject(ex);
                 });
         })
-            .then(() => console.log('IotQuickstart - established connections (db, queue) OK'));
+            .then(() => logger.info('IotQuickstart - established connections (db, queue) OK'));
     }
 
     /**
@@ -184,8 +186,6 @@ class IotQuickstart {
             check.assert.like(microServiceDbRecord, {queue_name: '', db_schema_name: '', code_name: ''},
                 'IllegalArg: Need arg "microServiceDbRecord" to be a valid database record of table "micro_service"');
 
-            console.log(this._amqpConnection);
-
             const queueOptions = {autoDelete: false, durable: false, exclusive: false};
 
             this._amqpConnection.queue(microServiceDbRecord.queue_name, queueOptions, (aQueue) => {
@@ -193,7 +193,8 @@ class IotQuickstart {
                 try {
 
                     aQueue.subscribe((message, headers, deliveryInfo) => {
-                        console.log(`${deliveryInfo.routingKey} - ${message.data.toString()}`);
+
+                        logger.info(`${deliveryInfo.routingKey} - ${message.data.toString()}`);
 
                         const eventDataJson = JSON.parse(message.data);
 
@@ -203,7 +204,7 @@ class IotQuickstart {
                         this._entityManager.insertEventData(microServiceDbRecord.db_schema_name, eventDataJson)
                             .catch((err) => {
                                 // pointless to crash the application because of this, so we just log it and see ...
-                                console.error(`Failed to persist message to "${microServiceDbRecord.db_schema_name}"`,
+                                logger.error(`Failed to persist message to "${microServiceDbRecord.db_schema_name}"`,
                                     err, eventDataJson);
                             });
 
@@ -218,7 +219,7 @@ class IotQuickstart {
 
             });
         })
-            .then(() => console.log(`Queue subscription for ${microServiceDbRecord.queue_name} OK`));
+            .then(() => logger.info(`Queue subscription for ${microServiceDbRecord.queue_name} OK`));
     }
 
     _createDbSchemaIfNotExists(microServiceDbRecord) {
@@ -227,7 +228,7 @@ class IotQuickstart {
         const dbUser = this._runtimeConfig.dbUser;
 
         return this._entityManager.createSchemaIfNotExists(dbSchemaName, dbUser)
-            .then(() => console.log(`Schema of ${microServiceDbRecord.code_name}: OK`));
+            .then(() => logger.info(`Schema of ${microServiceDbRecord.code_name}: OK`));
     }
 }
 
